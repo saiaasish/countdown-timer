@@ -1,0 +1,79 @@
+import tkinter as tk
+import datetime
+class countdown(tk.Frame):#a class for the timer
+    
+    def _init_(self, master):
+        super().__init__(master)
+        self.create_widget()
+        self.create_widget()
+        self.seconds_left= 0
+        self.timer_on= False
+        
+    def show_widget(self):
+        self.label.pack()
+        self.entry.pack()
+        self.start.pack()
+        self.stop.pack()
+        self.reset.pack()
+        
+    def create_widget(self):
+        self.label= tk.label(self, text= "Enter the time in seconds")
+        self.entry= tk.entry(self, justify= "center")
+        self.entry.focus_set()
+        self.reset= tk.button(self, text= "Reset", command= self.reset_button)
+        self.stop= tk.button(self, text= "Stop", command= self.stop_button)
+        self.start= tk.button(self, text= "Start", command= self.start_button)
+        
+    def timer(self):
+        self.label["text"]= self.seconds_to_time()
+        
+        if self.seconds:
+            self.seconds= self.seconds-1
+            self.timer_on= self.after(1000, self.timer)
+            
+        else:
+            self.timer_on= False
+            print("Time is up!")
+            
+    def reset_button(self):
+        self.seconds= 0
+        self.stop_timer()
+        self.timer_on= False
+        self.label["text"]= "Enter the time in seconds"
+        self.start.forget()
+        self.stop.forget()
+        self.reset.forget()
+        self.start.pack()
+        self.stop.pack()
+        self.reset.pack()
+        
+    def stop_button(self):
+        self.seconds= int(self.entry.get())
+        self.stop_timer()
+        
+    def start_button(self):
+        self.seconds= int(self.entry.get())
+        self.stop_timer()
+        self.timer()
+        self.start.forget()
+        self.stop.forget()
+        self.reset.forget()
+        self.start.pack()
+        self.stop.pack()
+        self.reset.pack()
+        
+    def stop_timer(self):
+        
+        if self.timer_on:
+            self.after_cancel(self.timer_on)
+            self.timer_on= False
+            
+    def seconds_to_time(self):
+        return datetime.timedelta(seconds= self.seconds)
+
+if __name__== "__main__":#this is the main loop
+    root= tk.Tk()
+    root.resizable(False, False)
+    timer= countdown(root)
+    timer.pack()
+    root.mainloop()
